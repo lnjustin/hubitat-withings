@@ -3,14 +3,17 @@
  *  Withings User
  *
  *  Copyright 2020 Dominick Meglio
+ *  Copyright 2022 @lnjustin
  *
- *  Licensed Virtual the BSD 3-Clause License
+ *  Licensed under the BSD 3-Clause License
  *
  *  Change History:
+ *  v1.7.0 - Added support for File Manager Device; Added additional Sleep fields
  *  v1.6.0 - Released under BSD 3-Clause License
  */
 
  import groovy.transform.Field
+ import groovy.json.JsonOutput 
  
 definition(
     name: "Withings User",
@@ -500,19 +503,19 @@ def processSleep(startDate, endDate) {
 	def startYMD = (new Date((long)startDate.toLong()*1000)).format("YYYY-MM-dd")
 	def endYMD = (new Date((long)endDate.toLong()*1000)).format("YYYY-MM-dd")
 
-	def data = apiGet("v2/sleep", "getsummary", [startdateymd: startYMD, enddateymd: endYMD, data_fields: "breathing_disturbances_intensity,deepsleepduration,durationtosleep,durationtowakeup,hr_average,hr_max,hr_min,lightsleepduration,remsleepduration,rr_average,rr_max,rr_min,sleep_score,snoring,snoringepisodecount,wakeupcount,wakeupduration"])?.series
-
-	if (!data)
+	def data = apiGet("v2/sleep", "getsummary", [startdateymd: startYMD, enddateymd: endYMD, data_fields: "breathing_disturbances_intensity,deepsleepduration,durationtosleep,durationtowakeup,hr_average,hr_max,hr_min,lightsleepduration,remsleepduration,rr_average,rr_max,rr_min,sleep_score,snoring,snoringepisodecount,wakeupcount,wakeupduration,sleep_efficiency,sleep_latency,total_sleep_time,total_timeinbed,wakeup_latency,waso,out_of_bed_count"])?.series
+    
+    if (!data) {
+        logDebug("Returning prematurely from processSleep since no data retrieved")
 		return
+    }
 
-	if (startDate.toLong() == state.lastSleepStart && endDate.toLong() == state.lastSleepEnd)
+	 if (startDate.toLong() == state.lastSleepStart && endDate.toLong() == state.lastSleepEnd)
 		return
 
 	def item = data.last()
 	def sleepData = item.data
 	def dev = null
-
-	
 
 	// Sleep tracker
 	if (item.model == 32) {
@@ -525,7 +528,7 @@ def processSleep(startDate, endDate) {
 	else if (item.model == 16) {
 		dev = getChildByCapability("StepSensor")
 	}
-
+    
 	dev.sendEvent(name: "wakeupDuration", value: sleepData.wakeupduration, isStateChange: true)
 	dev.sendEvent(name: "wakeupDurationDisplay", value: durationConverter(sleepData.wakeupduration), isStateChange: true)	
 	dev.sendEvent(name: "lightSleepDuration", value: sleepData.lightsleepduration, isStateChange: true)
@@ -548,7 +551,12 @@ def processSleep(startDate, endDate) {
 	dev.sendEvent(name: "snoringDisplay", value: durationConverter(sleepData.snoring ?: 0), isStateChange: true)
 	dev.sendEvent(name: "snoringEpisodeCount", value: sleepData.snoringepisodecount, isStateChange: true)
 	dev.sendEvent(name: "sleepScore", value: sleepData.sleep_score, isStateChange: true)
-
+    dev.sendEvent(name: "sleepEfficiency", value: sleepData.sleep_efficiency, isStateChange: true)
+    dev.sendEvent(name: "sleepLatency", value: sleepData.sleep_latency, isStateChange: true)
+    dev.sendEvent(name: "totalSleepDuration", value: sleepData.total_sleep_time, isStateChange: true)
+    dev.sendEvent(name: "wakeupLatency", value: sleepData.wakeup_latency, isStateChange: true)
+    dev.sendEvent(name: "awakeAfterSleepDuration", value: sleepData.waso, isStateChange: true)
+    dev.sendEvent(name: "outOfBedCount", value: sleepData.out_of_bed_count, isStateChange: true)
 
 	if (sleepData.sleep_score < 50)
 		dev.sendEvent(name: "sleepQuality", value: "Restless", isStateChange: true)
@@ -574,6 +582,19 @@ def processSleep(startDate, endDate) {
 	else
 		dev.sendEvent(name: "depthQuality", value: "Good", isStateChange: true)
 
+    
+    if (parent.logToFile == true) {
+        def typesToLog = parent.getDataTypesToLogToFile("Sleep")
+        if ( typesToLog.any { it.contains("Sleep") } ) {
+            typesToLog.removeElement("Sleep State") // sleep state always retrieved
+            typesToLog = typesToLog.collect { mapDataTypeToParam[it] }
+            typeString = typesToLog.join(",")
+            def detailedData = apiGet("v2/sleep", "get", [startdate: startDate.toLong(), enddate: endDate.toLong(), data_fields: typeString])
+            if (detailedData) parent.writeToFile(detailedData.series, "Sleep", dev.getId(), dev.getName())
+        }
+        else logDebug("Logging to file enabled, but not for Sleep category")
+    }
+    
 	state.lastSleepStart = startDate.toLong()
 	state.lastSleepEnd = endDate.toLong()
 }
@@ -641,8 +662,9 @@ def apiGet(endpoint, action, query = null) {
 		if (query != null)
 			params.query << query
 		httpGet(params) { resp ->
-			if (resp.data.status == 0)
+            if (resp.data.status == 0) {
 				result = resp.data.body
+            }
 			else if (resp.data.status == 401) {
 				refreshToken()
 			}
@@ -769,3 +791,9 @@ def logDebug(msg) {
 		log.debug msg
 	}
 }
+
+@Field static mapDataTypeToParam = [
+	'Sleep Snoring': 'snoring',
+	'Sleep Heart Rate': 'hr',
+    'Sleep Respiratory Rate': 'rr',
+]
