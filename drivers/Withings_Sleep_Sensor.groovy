@@ -24,6 +24,7 @@ metadata {
         attribute "durationToWakeup", "number"
         attribute "durationToWakeupDisplay", "string"
         attribute "heartRateAverage", "number"
+        attribute "heartRateAverageQuality", "string"
         attribute "heartRateMin", "number"
         attribute "heartRateMax", "number"
         attribute "respirationRateAverage", "number"

@@ -589,15 +589,22 @@ def processSleep(startDate, endDate) {
 	else if (sleepData.waso >= 3300)
     	dev.sendEvent(name: "awakeAfterSleepQuality", value: "Bad", isStateChange: true)
 
-	if (sleepData.sleepLatency <= 1200)
+	if (sleepData.sleep_latency <= 1200)
 		dev.sendEvent(name: "sleepLatencyQuality", value: "Good", isStateChange: true)
 	else
 		dev.sendEvent(name: "sleepLatencyQuality", value: "Not Good", isStateChange: true)
 
-	if (sleepData.wakeupLatency <= 360)
+	if (sleepData.wakeup_latency <= 360)
 		dev.sendEvent(name: "wakeupLatencyQuality", value: "Good", isStateChange: true)
 	else
 		dev.sendEvent(name: "wakeupLatencyQuality", value: "Not Good", isStateChange: true)
+	
+	if (sleepData.hr_average < 55)
+		dev.sendEvent(name: "heartRateAverageQuality", value: "Optimal", isStateChange: true)
+	else if (sleepData.hr_average < 75)
+		dev.sendEvent(name: "heartRateAverageQuality", value: "Normal", isStateChange: true)
+	else if (sleepData.hr_average >= 75)
+		dev.sendEvent(name: "heartRateAverageQuality", value: "Not Optimal", isStateChange: true)
 	
 
     if (parent.logToFile == true) {
