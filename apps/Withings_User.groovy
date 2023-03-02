@@ -582,7 +582,24 @@ def processSleep(startDate, endDate) {
 	else
 		dev.sendEvent(name: "depthQuality", value: "Good", isStateChange: true)
 
-    
+	if (sleepData.waso < 1080)
+		dev.sendEvent(name: "awakeAfterSleepQuality", value: "Good", isStateChange: true)
+	else if (sleepData.waso < 3300)
+		dev.sendEvent(name: "awakeAfterSleepQuality", value: "Average", isStateChange: true)
+	else if (sleepData.waso >= 3300)
+    	dev.sendEvent(name: "awakeAfterSleepQuality", value: "Bad", isStateChange: true)
+
+	if (sleepData.sleepLatency <= 1200)
+		dev.sendEvent(name: "sleepLatencyQuality", value: "Good", isStateChange: true)
+	else
+		dev.sendEvent(name: "sleepLatencyQuality", value: "Not Good", isStateChange: true)
+
+	if (sleepData.wakeupLatency <= 360)
+		dev.sendEvent(name: "wakeupLatencyQuality", value: "Good", isStateChange: true)
+	else
+		dev.sendEvent(name: "wakeupLatencyQuality", value: "Not Good", isStateChange: true)
+	
+
     if (parent.logToFile == true) {
         def typesToLog = parent.getDataTypesToLogToFile("Sleep")
         if ( typesToLog.any { it.contains("Sleep") } ) {

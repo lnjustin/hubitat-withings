@@ -2,10 +2,7 @@
  *  Withings Sleep Sensor
  *
  *  Copyright 2020 Dominick Meglio
- *  Licensed under the BSD 3-Clause License
  *
- *  Change History:
- *  v1.6.0 - Released under BSD 3-Clause License
  */
 
 metadata {
@@ -41,5 +38,16 @@ metadata {
         attribute "sleepQuality", "string"
         attribute "depthQuality", "string"
         attribute "durationQuality", "string"
+        
+        attribute "sleepEfficiency", "number"
+        attribute "sleepLatency", "number"
+        attribute "sleepLatencyQaulity", "string"
+        attribute "totalSleepDuration", "number"
+        attribute "totalTimeInBed", "number"
+        attribute "wakeupLatency", "number"
+        attribute "wakeupLatencyQuality", "string"
+        attribute "awakeAfterSleepDuration", "number"
+        attribute "awakeAfterSleepQuality", "string"
+        attribute "outOfBedCount", "number"
     }
 }
