@@ -42,7 +42,7 @@ metadata {
         
         attribute "sleepEfficiency", "number"
         attribute "sleepLatency", "number"
-        attribute "sleepLatencyQaulity", "string"
+        attribute "sleepLatencyQuality", "string"
         attribute "totalSleepDuration", "number"
         attribute "totalTimeInBed", "number"
         attribute "wakeupLatency", "number"
