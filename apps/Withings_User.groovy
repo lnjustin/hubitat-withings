@@ -404,8 +404,18 @@ def asyncWithingsNotificationHandler(params) {
 				processBedPresence(false, params.deviceid)
 			break
 		case "sleep":
-			if (params.startdate != null)
-				processSleep(params.startdate, params.enddate)
+			if (params.startdate != null) {
+				def sleepUpdateRestriction = parent.getSleepDataUpdateRestriction()
+				if (sleepUpdateRestriction && sleepUpdateRestriction.isRestricted && sleepUpdateRestriction.isRestricted == true) {
+					def windowStart = toDateTime(sleepUpdateRestriction.windowStart)
+					def windowEnd = toDateTime(sleepUpdateRestriction.windowEnd)
+					if (timeOfDayIsBetween(windowStart, windowEnd, new Date(), location.timeZone)) {
+						processSleep(params.startdate, params.enddate)
+					}
+					else logDebug("Sleep data received from Withings, but not updated in Hubitat because outside of sleep data update window.H")
+				}
+				else processSleep(params.startdate, params.enddate)
+			}
 			break
 		case "temperature":
 			if (params.startdate != null)

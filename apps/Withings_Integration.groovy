@@ -9,7 +9,7 @@
  *
  *  Change History:
  *  v1.6.0 - Released under BSD 3-Clause License
- *  v1.7.0 - Added support for File Manager Device
+ *  v1.7.0 - Added support for File Manager Device and data logging; Added option to restrict sleep data update to time window
  */
  
 import groovy.transform.Field
@@ -70,6 +70,11 @@ def mainPage() {
 			        input "dataTypesToLogToFile", "enum", title: "Select Data Type(s) to Log to File", options: ["Sleep State", "Sleep Snoring", "Sleep Heart Rate", "Sleep Respiratory Rate"], multiple: true, required: true   
                     input "logFormat", "enum", title: "Select Log Format", options: ["Withings Format", "Quick Chart Format"], multiple: false, required: true   
                }
+               input "restrictSleepUpdates", "bool", title: "Restrict Sleep Data Updates to Time Window?", width: 12, submitOnChange: true
+               if (restrictSleepUpdates == true) {
+                    input "sleepUpdateWindowStart", "time", title: "Start of Window During Which to Update Sleep Data", required: true
+                    input "sleepUpdateWindowEnd", "time", title: "End of Window During Which to Update Sleep Data", required: true
+               }
                 input "debugOutput", "bool", title: "Enable debug logging?", defaultValue: true
        			label title: "Enter a name for parent app (optional)", required: false
  			}
@@ -98,6 +103,10 @@ def getOAuthDetails() {
 
 def getMeasurementSystem() {
     return measurementSystem.toInteger()
+}
+
+def getSleepDataUpdateRestriction() {
+    return [isRestricted: restrictSleepUpdates, windowStart: sleepUpdateWindowStart, windowEnd: sleepUpdateWindowEnd]
 }
 
 def writeToFile(data, category, deviceId, deviceName) {
