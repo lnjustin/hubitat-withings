@@ -79,7 +79,7 @@ def mainPage() {
  			}
         if(state.appInstalled == 'COMPLETE'){
             section("Withings Users") {
-				app(name: "withingsUsers", appName: "Withings User", namespace: "dcm.withings", title: "Add a new Withings User", multiple: true)
+				app(name: "withingsUsers", appName: "Withings User", namespace: "lnjustin", title: "Add a new Withings User", multiple: true)
 			}
 			displayFooter()
 		}
