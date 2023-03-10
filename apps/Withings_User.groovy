@@ -8,7 +8,8 @@
  *  Licensed under the BSD 3-Clause License
  *
  *  Change History:
- *  v1.7.0 - Added support for File Manager Device; Added additional Sleep fields
+ *  v1.7.1 - Updated namespace
+ *  v1.7.0 - Added support for File Manager Device and data logging; Added option to restrict sleep data update to time window
  *  v1.6.0 - Released under BSD 3-Clause License
  */
 
@@ -17,11 +18,11 @@
  
 definition(
     name: "Withings User",
-    namespace: "dcm.withings",
-    author: "Dominick Meglio",
+    namespace: "lnjustin",
+    author: "Dominick Meglio, lnjustin",
     description: "Integrate Withings smart devices with Hubitat.",
     category: "My Apps",
-	parent: "dcm.withings:Withings Integration",
+	parent: "lnjustin:Withings Integration",
     iconUrl: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience.png",
     iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png",
     iconX3Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png",

@@ -2,14 +2,15 @@
  *  Withings Thermometer
  *
  *  Copyright 2020 Dominick Meglio
+ *  Copyright 2022 @lnjustin
  *  Licensed under the BSD 3-Clause License
  *
  *  Change History:
- *  v1.6.0 - Released under BSD 3-Clause License
+ *  All Changes documented in Withings_User.groovy
  */
 
 metadata {
-    definition(name: "Withings Blood Pressure Monitor", namespace: "dcm.withings", author: "dmeglio@gmail.com") {
+    definition(name: "Withings Blood Pressure Monitor", namespace: "lnjustin", author: "dmeglio@gmail.com, lnjustin") {
         capability "Sensor"
 		capability "Battery"
 

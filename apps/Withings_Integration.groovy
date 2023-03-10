@@ -8,16 +8,15 @@
  *  Licensed under the BSD 3-Clause License
  *
  *  Change History:
- *  v1.6.0 - Released under BSD 3-Clause License
- *  v1.7.0 - Added support for File Manager Device and data logging; Added option to restrict sleep data update to time window
+ *  All Changes documented in Withings_User.groovy
  */
  
 import groovy.transform.Field
 
 definition(
     name: "Withings Integration",
-    namespace: "dcm.withings",
-    author: "Dominick Meglio",
+    namespace: "lnjustin",
+    author: "Dominick Meglio, lnjustin",
     description: "Integrate various Withings into Hubitat.",
     category: "My Apps",
     iconUrl: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience.png",
