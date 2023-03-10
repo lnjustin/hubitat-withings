@@ -26,7 +26,7 @@ definition(
     iconUrl: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience.png",
     iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png",
     iconX3Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png",
-	documentationLink: "https://github.com/dcmeglio/hubitat-vacationmanager/blob/master/README.md")
+	documentationLink: "https://github.com/lnjustin/hubitat-withings/blob/master/README.md")
 
 preferences {
     page(name: "prefMain")
@@ -744,27 +744,27 @@ def createChildDevices() {
 	for (scale in scales)
 	{
 		if (!getChildDevice(buildDNI(scale)))
-            addChildDevice("dcm.withings", "Withings Scale", buildDNI(scale), 1234, ["name": "${userName} ${state.devices.scales[scale]}", isComponent: false])
+            addChildDevice("lnjustin", "Withings Scale", buildDNI(scale), 1234, ["name": "${userName} ${state.devices.scales[scale]}", isComponent: false])
 	}
 	for (sleepMonitor in sleepMonitors)
 	{
 		if (!getChildDevice(buildDNI(sleepMonitor)))
-            addChildDevice("dcm.withings", "Withings Sleep Sensor", buildDNI(sleepMonitor), 1234, ["name": "${userName} ${state.devices.sleepMonitors[sleepMonitor]}", isComponent: false])
+            addChildDevice("lnjustin", "Withings Sleep Sensor", buildDNI(sleepMonitor), 1234, ["name": "${userName} ${state.devices.sleepMonitors[sleepMonitor]}", isComponent: false])
 	}
 	for (activityTracker in activityTrackers)
 	{
 		if (!getChildDevice(buildDNI(activityTracker)))
-            addChildDevice("dcm.withings", "Withings Activity Tracker", buildDNI(activityTracker), 1234, ["name": "${userName} ${state.devices.activityTrackers[activityTracker]}", isComponent: false])
+            addChildDevice("lnjustin", "Withings Activity Tracker", buildDNI(activityTracker), 1234, ["name": "${userName} ${state.devices.activityTrackers[activityTracker]}", isComponent: false])
 	}
 	for (bp in bloodPressure)
 	{
 		if (!getChildDevice(buildDNI(bp)))
-            addChildDevice("dcm.withings", "Withings Blood Pressure Monitor", buildDNI(bp), 1234, ["name": "${userName} ${state.devices.bloodPressure[bp]}", isComponent: false])
+            addChildDevice("lnjustin", "Withings Blood Pressure Monitor", buildDNI(bp), 1234, ["name": "${userName} ${state.devices.bloodPressure[bp]}", isComponent: false])
 	}
 	for (thermometer in thermometers)
 	{
 		if (!getChildDevice(buildDNI(thermometer)))
-            addChildDevice("dcm.withings", "Withings Thermometer", buildDNI(thermometer), 1234, ["name": "${userName} ${state.devices.thermometers[thermometer]}", isComponent: false])
+            addChildDevice("lnjustin", "Withings Thermometer", buildDNI(thermometer), 1234, ["name": "${userName} ${state.devices.thermometers[thermometer]}", isComponent: false])
 	}
 }
 
