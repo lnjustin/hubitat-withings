@@ -621,10 +621,15 @@ def processSleep(startDate, endDate) {
     if (parent.logToFile == true) {
         def typesToLog = parent.getDataTypesToLogToFile("Sleep")
         if ( typesToLog.any { it.contains("Sleep") } ) {
+			def params = [startdate: startDate.toLong(), enddate: endDate.toLong()]
             typesToLog.removeElement("Sleep State") // sleep state always retrieved
-            typesToLog = typesToLog.collect { mapDataTypeToParam[it] }
-            typeString = typesToLog.join(",")
-            def detailedData = apiGet("v2/sleep", "get", [startdate: startDate.toLong(), enddate: endDate.toLong(), data_fields: typeString])
+			if (typeToLogs != [] && typesToLogs != null) {
+				// data fields other than Sleep State must be included in the data_fields param as comma separated list
+				typesToLog = typesToLog.collect { mapDataTypeToParam[it] }
+            	typeString = typesToLog.join(",")
+				params["data_fields"] = typeString
+			}
+            def detailedData = apiGet("v2/sleep", "get", params)
             if (detailedData) parent.writeToFile(detailedData.series, "Sleep", dev.getId(), dev.getName())
         }
         else logDebug("Logging to file enabled, but not for Sleep category")

@@ -1,9 +1,9 @@
 {
   "packageName": "Withings",
   "author": "lnjustin",
-  "version": "1.7",
+  "version": "1.7.1",
   "minimumHEVersion": "2.1.9",
-  "dateReleased": "2023-03-09",
+  "dateReleased": "2023-03-14",
   "apps": [
     {
       "id": "24b3f8b0-c366-436c-a1bc-0ed222e421fb",
