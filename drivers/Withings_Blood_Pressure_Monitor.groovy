@@ -1,5 +1,5 @@
 /**
- *  Withings Thermometer
+ *  Withings Blood Pressure Monitor
  *
  *  Copyright 2020 Dominick Meglio
  *  Copyright 2022 @lnjustin
