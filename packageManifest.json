@@ -8,7 +8,7 @@
     {
       "id": "24b3f8b0-c366-436c-a1bc-0ed222e421fb",
       "name": "Withings Integration",
-      "namespace": "dcm.withings",
+      "namespace": "lnjustin",
       "location": "https://raw.githubusercontent.com/lnjustin/hubitat-withings/master/apps/Withings_Integration.groovy",
       "required": true,
       "oauth": true,
@@ -17,7 +17,7 @@
     {
       "id": "0c8fd100-f5bf-4f6f-b364-bcdb88adbb1e",
       "name": "Withings User",
-      "namespace": "dcm.withings",
+      "namespace": "lnjustin",
       "location": "https://raw.githubusercontent.com/lnjustin/hubitat-withings/master/apps/Withings_User.groovy",
       "required": true,
       "oauth": true,
@@ -28,35 +28,35 @@
     {
       "id": "205ded85-eadc-4512-9ca5-99622b15214b",
       "name": "Withings Activity Tracker",
-      "namespace": "dcm.withings",
+      "namespace": "lnjustin",
       "location": "https://raw.githubusercontent.com/lnjustin/hubitat-withings/master/drivers/Withings_Activity_Tracker.groovy",
       "required": false
     },
     {
       "id": "c18f5a58-c603-4b7b-b4cf-1c58527ac0ee",
       "name": "Withings Blood Pressure Monitor",
-      "namespace": "dcm.withings",
+      "namespace": "lnjustin",
       "location": "https://raw.githubusercontent.com/lnjustin/hubitat-withings/master/drivers/Withings_Blood_Pressure_Monitor.groovy",
       "required": false
     },
     {
       "id": "48a68ad7-1c68-4d36-93cb-399294f30e8a",
       "name": "Withings Scale",
-      "namespace": "dcm.withings",
+      "namespace": "lnjustin",
       "location": "https://raw.githubusercontent.com/lnjustin/hubitat-withings/master/drivers/Withings_Scale.groovy",
       "required": false
     },
     {
       "id": "880ec68a-4e76-4011-af1e-e56df7b5ba59",
       "name": "Withings Sleep Sensor",
-      "namespace": "dcm.withings",
+      "namespace": "lnjustin",
       "location": "https://raw.githubusercontent.com/lnjustin/hubitat-withings/master/drivers/Withings_Sleep_Sensor.groovy",
       "required": false
     },
     {
       "id": "fcff2b18-8aa7-45d9-87d2-3923d5e6bb5e",
       "name": "Withings Thermometer",
-      "namespace": "dcm.withings",
+      "namespace": "lnjustin",
       "location": "https://raw.githubusercontent.com/lnjustin/hubitat-withings/master/drivers/Withings_Thermometer.groovy",
       "required": false
     }
