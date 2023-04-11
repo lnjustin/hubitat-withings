@@ -5,7 +5,7 @@ This integration provides you with a way to integrate your various Withings devi
 To obtain access to the Withings API, follow the steps below:
 * Go to [https://account.withings.com/partner/add_oauth2](https://account.withings.com/partner/add_oauth2)
 * Enter a Description, Contact Email, and Company name
-* Enter **https://cloud.hubitat.com/oauth/stateredirect** for the Callback URL
+* Enter **https://cloud.hubitat.com/oauth/stateredirect** for the Callback URL (although some have reported this does not work, and you may need to leave this blank)
 * Choose **Prod** for the environment
 * For the logo you can use **https://github.com/dcmeglio/hubitat-withings/raw/master/hubitat-logo.PNG**
 * Note both the **Client Id** and **Consumer Secret**
