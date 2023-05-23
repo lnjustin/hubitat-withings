@@ -8,7 +8,8 @@
  *  Licensed under the BSD 3-Clause License
  *
  *  Change History:
- *  v1.7.1 - Updated namespace
+ *  v1.7.2 - Fixed device label
+*  v1.7.1 - Updated namespace
  *  v1.7.0 - Added support for File Manager Device and data logging; Added option to restrict sleep data update to time window
  *  v1.6.0 - Released under BSD 3-Clause License
  */
@@ -749,27 +750,27 @@ def createChildDevices() {
 	for (scale in scales)
 	{
 		if (!getChildDevice(buildDNI(scale)))
-            addChildDevice("lnjustin", "Withings Scale", buildDNI(scale), 1234, ["name": "${userName} ${state.devices.scales[scale]}", isComponent: false])
+            addChildDevice("lnjustin", "Withings Scale", buildDNI(scale), ["name": "${userName} ${state.devices.scales[scale]}", "label": "${userName} ${state.devices.scales[scale]}", isComponent: false])
 	}
 	for (sleepMonitor in sleepMonitors)
 	{
 		if (!getChildDevice(buildDNI(sleepMonitor)))
-            addChildDevice("lnjustin", "Withings Sleep Sensor", buildDNI(sleepMonitor), 1234, ["name": "${userName} ${state.devices.sleepMonitors[sleepMonitor]}", isComponent: false])
+            addChildDevice("lnjustin", "Withings Sleep Sensor", buildDNI(sleepMonitor), ["name": "${userName} ${state.devices.sleepMonitors[sleepMonitor]}", "label": "${userName} ${state.devices.sleepMonitors[sleepMonitor]}", isComponent: false])
 	}
 	for (activityTracker in activityTrackers)
 	{
 		if (!getChildDevice(buildDNI(activityTracker)))
-            addChildDevice("lnjustin", "Withings Activity Tracker", buildDNI(activityTracker), 1234, ["name": "${userName} ${state.devices.activityTrackers[activityTracker]}", isComponent: false])
+            addChildDevice("lnjustin", "Withings Activity Tracker", buildDNI(activityTracker), ["name": "${userName} ${state.devices.activityTrackers[activityTracker]}", "label": "${userName} ${state.devices.activityTrackers[activityTracker]}", isComponent: false])
 	}
 	for (bp in bloodPressure)
 	{
 		if (!getChildDevice(buildDNI(bp)))
-            addChildDevice("lnjustin", "Withings Blood Pressure Monitor", buildDNI(bp), 1234, ["name": "${userName} ${state.devices.bloodPressure[bp]}", isComponent: false])
+            addChildDevice("lnjustin", "Withings Blood Pressure Monitor", buildDNI(bp), ["name": "${userName} ${state.devices.bloodPressure[bp]}", "label": "${userName} ${state.devices.bloodPressure[bp]}", isComponent: false])
 	}
 	for (thermometer in thermometers)
 	{
 		if (!getChildDevice(buildDNI(thermometer)))
-            addChildDevice("lnjustin", "Withings Thermometer", buildDNI(thermometer), 1234, ["name": "${userName} ${state.devices.thermometers[thermometer]}", isComponent: false])
+            addChildDevice("lnjustin", "Withings Thermometer", buildDNI(thermometer), ["name": "${userName} ${state.devices.thermometers[thermometer]}", "label": "${userName} ${state.devices.thermometers[thermometer]}", isComponent: false])
 	}
 }
 
