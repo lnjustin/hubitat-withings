@@ -8,6 +8,7 @@
  *  Licensed under the BSD 3-Clause License
  *
  *  Change History:
+ *  v1.7.3 - Added virtual activity tracker
  *  v1.7.2 - Fixed device label
 *  v1.7.1 - Updated namespace
  *  v1.7.0 - Added support for File Manager Device and data logging; Added option to restrict sleep data update to time window
@@ -16,6 +17,7 @@
 
  import groovy.transform.Field
  import groovy.json.JsonOutput 
+ import java.security.MessageDigest
  
 definition(
     name: "Withings User",
@@ -71,6 +73,20 @@ preferences {
 	88: [attribute: "boneMass", displayAttribute: "boneMassDisplay", converter: this.&massConverter],
 	91: [attribute: "pulseWaveVelocity", converter: this.&pulseWaveVelocityConverter]
 ]
+
+String.metaClass.toSHA1 = { salt = "" ->
+   def messageDigest = MessageDigest.getInstance("SHA1")
+
+   messageDigest.update(salt.getBytes())
+   messageDigest.update(delegate.getBytes())
+
+   /*
+* Why pad up to 40 characters? Because SHA-1 has an output
+* size of 160 bits. Each hexadecimal character is 4-bits.
+* 160 / 4 = 40
+*/
+   new BigInteger(1, messageDigest.digest()).toString(16).padLeft(40, '0')
+}
 
 // Converters
 def massConverter(weight, unit) {
@@ -179,6 +195,12 @@ def prefDevices() {
 				input "sleepMonitors", "enum", title: "Sleep Monitors", options: state.devices.sleepMonitors, multiple: true, submitOnChange: true
 			if (state.devices?.activityTrackers?.size() > 0)
 				input "activityTrackers", "enum", title: "Activity Trackers", options: state.devices.activityTrackers, multiple: true
+			input "useVirtualActivityTracker", "bool", title: "Create Virtual Activity Tracker?", description: "Create a virtual activity tracker with activity data to which you give Withings access from a non-Withings device", submitOnChange: true
+			if (useVirtualActivityTracker == true) {
+				def trackerString = 'WithingsVirtualActivityTracker'
+				state.virtualActivityTracker = trackerString.toSHA1('salty')
+			}
+			else state.virtualActivityTracker = null
 			if (state.devices?.bloodPressure?.size() > 0)
 				input "bloodPressure", "enum", title: "Blood Pressure Monitors", options: state.devices.bloodPressure, multiple: true
 			if (state.devices?.thermometers?.size() > 0)
@@ -323,6 +345,7 @@ def getWithingsDevices() {
 	def bloodPressure = [:]
 	def thermometers = [:]
 	def body = apiGet("v2/user", "getdevice")
+	log.debug "Withings Devices: ${body}"
 	for (device in body.devices) {
 		if (device.type == "Scale")
 			scales[device.deviceid] = device.model
@@ -353,7 +376,7 @@ def updateSubscriptions() {
 		apiGet("notify", "subscribe", [callbackurl: callbackUrl("weight"), appli: applids.weight])
 		apiGet("notify", "subscribe", [callbackurl: callbackUrl("heartrate"), appli: applids.heartrate])
 	}
-	if (activityTrackers?.size() > 0) {
+	if (activityTrackers?.size() > 0 || state.virtualActivityTracker != null) {
 		apiGet("notify", "subscribe", [callbackurl: callbackUrl("activity"), appli: applids.activity])
 	}
 	if (bloodPressure?.size() > 0) {
@@ -434,6 +457,9 @@ def processActivity(date) {
 
 		if (item.deviceid != null)
 			dev = getChildDevice(buildDNI(item.deviceid))
+		else if (state.virtualActivityTracker != null) {
+			dev = getChildDevice(buildDNI(state.virtualActivityTracker))
+		}
 		else if (item.is_tracker)
 			dev = getChildByCapability("StepSensor")
 
@@ -762,6 +788,10 @@ def createChildDevices() {
 		if (!getChildDevice(buildDNI(activityTracker)))
             addChildDevice("lnjustin", "Withings Activity Tracker", buildDNI(activityTracker), ["name": "${userName} ${state.devices.activityTrackers[activityTracker]}", "label": "${userName} ${state.devices.activityTrackers[activityTracker]}", isComponent: false])
 	}
+	if (state.virtualActivityTracker != null) {
+		if (!getChildDevice(buildDNI(state.virtualActivityTracker)))
+            addChildDevice("lnjustin", "Withings Activity Tracker", buildDNI(state.virtualActivityTracker), ["name": "${userName} Virtual Activity Tracker", "label": "${userName} Virtual Activity Tracker", isComponent: false])
+	}
 	for (bp in bloodPressure)
 	{
 		if (!getChildDevice(buildDNI(bp)))
@@ -788,6 +818,13 @@ def cleanupChildDevices()
 				deviceFound = true
 				break
 			}
+		}
+		if (state.virtualActivityTracker != null) {
+			if (state.userid + ":" + state.virtualActivityTracker == deviceId)
+			{
+				deviceFound = true
+				break
+			}			
 		}
 
 		if (deviceFound == true)
