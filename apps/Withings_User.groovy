@@ -8,6 +8,7 @@
  *  Licensed under the BSD 3-Clause License
  *
  *  Change History:
+ * v1.7.4 - Bug fix
  *  v1.7.3 - Added virtual activity tracker
  *  v1.7.2 - Fixed device label
 *  v1.7.1 - Updated namespace
@@ -266,10 +267,11 @@ def oauthCallback() {
 					redirect_uri: "https://cloud.hubitat.com/oauth/stateredirect"
 				]
 			]) { resp ->
-    			if (resp && resp.data && resp.success) {
+    			if (resp && resp.data && resp.success && resp.data.body.refresh_token && resp.data.body.access_token) {
                     state.refreshToken = resp.data.body.refresh_token
                     state.authToken = resp.data.body.access_token
-                    state.authTokenExpires = (now() + (resp.data.body.expires_in * 1000)) - 60000
+					def tokenExpiresIn = resp.data.body.expires_in ?: 60
+               		state.authTokenExpires = now() + (tokenExpiresIn * 1000) - 60000
 					state.userid = resp.data.body.userid
                 }
             }
@@ -317,10 +319,12 @@ def refreshToken() {
 			]
 		]
 		httpPost(params) { resp -> 
-			if (resp && resp.data && resp.success) {
+			if (resp && resp.data && resp.success && resp.data.body.refresh_token && resp.data.body.access_token) {
 				state.refreshToken = resp.data.body.refresh_token
                 state.authToken = resp.data.body.access_token
-                state.authTokenExpires = now() + (resp.data.body.expires_in * 1000) - 60000
+				logDebug("refreshToken response body: ${resp.data.body}")
+				def tokenExpiresIn = resp.data.body.expires_in ?: 60
+                state.authTokenExpires = now() + (tokenExpiresIn * 1000) - 60000
 				result = true
 			}
 			else {
@@ -345,7 +349,7 @@ def getWithingsDevices() {
 	def bloodPressure = [:]
 	def thermometers = [:]
 	def body = apiGet("v2/user", "getdevice")
-	log.debug "Withings Devices: ${body}"
+	// log.debug "Withings Devices: ${body}"
 	for (device in body.devices) {
 		if (device.type == "Scale")
 			scales[device.deviceid] = device.model
